@@ -1,0 +1,4 @@
+
+type Tweet = {
+    text: string
+}
