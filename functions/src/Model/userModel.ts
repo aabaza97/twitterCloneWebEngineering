@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs')
+
 
 export class User {
 
@@ -17,19 +17,19 @@ export class User {
 
 
         this.email = body.email
-        this.password = bcrypt.hash(body.password,8)
+        this.password = body.password
         this.username = body.username
         this.avatar = '/'
         this.coverPhoto = '/'
         this.bio = body.bio
         this.location = body.location
-        this.birthdate = body.birthdate
+        this.birthdate = ''
 
 
     }
     
 
-    storeImage = (avatar : Object) => {
+    static storeImage = (avatar : Object) => {
         return '/'
     }
 }
