@@ -11,7 +11,8 @@ module.exports = async (mediaPaths:valByString) => {
     for(const file in mediaPaths){
         const filename = uuidv4()
         await storageBucket.upload(mediaPaths[file],{
-            destination: filename
+            destination: filename,
+            gzip:true
         })
         const url = `http://storage.googleapis.com/${storageBucket.name}/${filename}`
         files[file] = url
