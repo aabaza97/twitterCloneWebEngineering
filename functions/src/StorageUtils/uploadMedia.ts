@@ -7,12 +7,16 @@ interface valByString {
 
 module.exports = async (mediaPaths:valByString) => {
     const files : valByString = {}
-    
+    const metadata = {
+        contentType: 'image/jpeg',
+      }
     for(const file in mediaPaths){
         const filename = uuidv4()
         await storageBucket.upload(mediaPaths[file],{
             destination: filename,
-            gzip:true
+            gzip:true,
+            metadata
+            
         })
         const url = `http://storage.googleapis.com/${storageBucket.name}/${filename}`
         files[file] = url
