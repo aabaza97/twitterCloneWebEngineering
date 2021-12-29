@@ -3,7 +3,7 @@
 export class User {
 
     email: string
-    password: string
+    name: string
     username: string
     avatar : string
     coverPhoto : string
@@ -17,10 +17,10 @@ export class User {
 
 
         this.email = body.email
-        this.password = body.password
+        this.name = body.name
         this.username = body.username
-        this.avatar = '/'
-        this.coverPhoto = '/'
+        this.avatar = body.avatar || '/'
+        this.coverPhoto = body.coverPhoto || '/'
         this.bio = body.bio
         this.location = body.location
         this.birthdate = ''
