@@ -1,5 +1,4 @@
 import {Response} from "express";
-import { ResultStorage } from "firebase-functions/v1/testLab";
 import {db} from "../config/firebase";
 
 type Request = {
@@ -8,7 +7,7 @@ type Request = {
 }
 
 const colName = "tweets";
-const likesColName = "user_tweet_likes";
+// const likesColName = "user_tweet_likes";
 
 
 const composeTweet = async (req:Request, res: Response) => {
@@ -215,16 +214,16 @@ const getTweetReplies = async (req:Request, res: Response) => {
 };
 
 
-const likeTweet = async (req:Request, res: Response) => {
-  const {id} = req.params;
-  try {
-    // -- Transaction
-    // 1- create a like reference document in the likes collection...
-    // 2- increase the count inside the doc
-  } catch (error) {
-    return res.status(500).json(error.message);
-  }
-};
+// const likeTweet = async (req:Request, res: Response) => {
+//   const {id} = req.params;
+//   try {
+//     // -- Transaction
+//     // 1- create a like reference document in the likes collection...
+//     // 2- increase the count inside the doc
+//   } catch (error) {
+//     return res.status(500).json(error.message);
+//   }
+// };
 
 export {
   composeTweet,

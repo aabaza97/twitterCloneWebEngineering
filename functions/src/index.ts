@@ -7,7 +7,7 @@ const mediaToURL = require('./middleware/mediaToURL');
 
 const App = express();
 const corsHandler = cors({origin: true});
-App.use(express.json())
+App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello there...."));
 App.post("/tweets", composeTweet);
@@ -19,7 +19,7 @@ App.post("/reply/:id");
 App.post("/retweet/:id");
 App.post("/replies/:id");
 
-App.post('/user',mediaToURL,createUser)
+App.post("/user", mediaToURL, createUser);
 App.use(corsHandler);
 
 exports.App = functions.https.onRequest(App);
