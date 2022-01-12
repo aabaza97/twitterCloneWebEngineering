@@ -1,10 +1,10 @@
-import {Response} from "express";
+import {Response, Request} from "express";
 import {db} from "../config/firebase";
 
-type Request = {
-  body: Tweet
-  params: {id: string}
-}
+// type CRequest: Request = {
+//   body: Tweet
+//   params: {id: string}
+// }
 
 const colName = "tweets";
 // const likesColName = "user_tweet_likes";
@@ -14,12 +14,8 @@ const composeTweet = async (req:Request, res: Response) => {
   const {
     text,
     userId,
-    postPrivacy,
     hasMedia,
     hasMention,
-    repostCount,
-    repliesCount,
-    likesCount,
     location,
     timestamp,
     mediaType} = req.body;
@@ -31,13 +27,13 @@ const composeTweet = async (req:Request, res: Response) => {
       id: tweetDoc.id,
       text: text,
       userId: userId,
-      postPrivacy: postPrivacy,
+      postPrivacy: "",
       hasMedia: hasMedia,
       hasMention: hasMention,
       isRepost: false,
-      repostCount: repostCount,
-      repliesCount: repliesCount,
-      likesCount: likesCount,
+      repostCount: 0,
+      repliesCount: 0,
+      likesCount: 0,
       repostToPostId: "",
       location: location,
       timestamp: timestamp,
