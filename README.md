@@ -1,22 +1,49 @@
-# twitterCloneWebEngineering
+# 🐣 Twitter Clone - A Web Engineering Project
 
-## API Endpoints
-
-### Create User : 
-#### API Call `post : '/user'`
-This creates a user account
-
-Request JSON Body :  
+This repo is intended to be the home for the backend API of the final project for the web engineering course (CC552). Where we, the developers of the project, can illustrate the foundation of this API to provide a seamless integration experience with the client's application. Also, to document our work in a slightly professional manner.
 
 
+# 🥚 Introduction: 
+This  `REST API` is built using `Serverless Architecture` with the help of `Firebase` and `ExpressJS`. This means that the entirety of the express application is running through the Firebase cloud service as a Cloud Function. Obviously, this decision was made to simplify the deployment process as much as possible so that the focus remains of the development of the application itself.
+
+# 📟 Tech Stack: 
+- `Firebase Authentication` (*_serving as a secure way to both authenticate and authorise users_*)
+- `Firebase Firestore` (*_serving as NoSQL datastore of the app_*)
+- `Firebase Cloud Functions` (*_serving as the host environment of the backend application_*)
+- `Firebase Storage` (*_serving as the file store of the app_*)
+- `ExpressJS` (*_serving as the framework used to write the API_*)
+- `TypeScript` (*_serving as the scripting langues used to write the API_*)
+
+
+# 🛠 Usage & EndPoints
+To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
+
+
+
+## 📍 `/user` 
+This end point is responsible for creating a user's account
+
+#### HTTP Request Method
+- `POST Request`
+
+#### Request Params
+- There're no request params for this case.
+
+#### Request Body Object Structure
+- The request body shall contain a `JSON Object` structured as follows
+
+```Javascript
+{
     email : string       
     username : string      
     birthdate : string   
     token : firbaseAuth.UserObject.idToken
+}
+```
     
-    
-Response Body : User Object
-  
+#### Response Body Object Structure
+```Javascript
+{  
     id : string   
     email: string   
     name: string   
@@ -31,8 +58,102 @@ Response Body : User Object
     tweetsNo : number   
     creationDate : string   
   
-  
+ }
+ ```
 
-    
-		
-  
+-----
+
+## 📍 `/tweets`
+This endpoint is responsible for 3 cases:
+
+### 1️⃣. Composing new tweets
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+- There're no request params for this case.
+
+#### Request Body Object Structure:
+- The request body shall contain a `JSON Object` structured as follows
+
+```Javascript
+{
+    text: string  // textual content of the tweet
+    userId: string // the string identifier of the user
+    hasMedia: boolean // if contains Media, set it to true
+    mediaType: MediaType // enum representing media type( video, picture, voice)
+    hasMention: boolean // if it has mentions, pass as true
+    location: string // string descriping location
+    timestamp: number // timestamp double number
+}
+```
+
+- The `mediaType` enum is structured as follows
+```Javascript
+enum MediaType {
+     Video,
+     Picture,
+     Audio
+}
+```
+
+----
+### 2️⃣. Deleting a tweet
+#### HTTP Request Method:
+-  `DELETE Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the tweet to delete. |
+
+#### Request Body:
+- There's no request body for this operation.
+
+----
+### 3️⃣. Loading the feed
+#### HTTP Request Method:
+- `GET Request`
+
+#### Request Params:
+- There're no request params for this case.
+
+#### Request Body:
+- There's no request body for this operation.
+
+-----
+
+## 📍 `/tweet`
+This endpoint is responsible for loading a single tweet.
+
+#### HTTP Request Method:
+-  `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the tweet to load. |
+
+#### Request Body:
+- There's no request body for this operation.
+
+
+## 📍 `/profile`
+This endpoint is responsible for loading the tweets of a single user.
+
+#### HTTP Request Method:
+-  `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the user to load. |
+
+#### Request Body:
+- There's no request body for this operation.
