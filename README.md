@@ -4,7 +4,7 @@ This repo is intended to be the home for the backend API of the final project fo
 
 
 # 🥚 Introduction: 
-This  `REST API` is built using `Serverless Architecture` with the help of `Firebase` and `ExpressJS`. This means that the entirety of the express application is running through the Firebase cloud service as a Cloud Function. Obviously, this decision was made to simplify the deployment process as much as possible so that the focus remains of the development of the application itself.
+This  `REST API` is built using `Serverless Architecture` with the help of `Firebase` and `ExpressJS`. This means that the entirety of the express application is running through the Firebase cloud service as a Cloud Function. Obviously, this decision was made to simplify the deployment process as much as possible so that the focus remains of the development on the development of the application itself.
 
 # 📟 Tech Stack: 
 - `Firebase Authentication` (*_serving as a secure way to both authenticate and authorise users_*)
