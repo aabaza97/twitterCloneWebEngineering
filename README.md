@@ -247,3 +247,120 @@ This endpoint is responsible for loading the tweets of a single user.
 
 #### Request Body:
 - There's no request body for this operation.
+
+## 📍 `/follow`
+This endpoint is responsible for 2 cases:
+
+### 1️⃣. Follow a user
+⚠️**Auth Required** 
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the user to follow. |
+
+
+#### Request Body Object Structure:
+- No Request body
+
+
+#### Response Body Object Structure
+```Javascript
+success or error message
+ ```
+---
+### 2️⃣. unfollow a user
+⚠️**Auth Required** 
+
+#### HTTP Request Method:
+
+- `DELETE Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the user to unfollow. |
+
+
+#### Request Body Object Structure:
+- No Request body
+
+
+#### Response Body Object Structure
+```Javascript
+success or error message
+ ```
+---
+## 📍 `/follow/followers`
+### get user followers
+⚠️**Auth Required** 
+
+#### HTTP Request Method:
+
+- `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the user to get followers for. |
+
+
+#### Request Body Object Structure:
+- No Request body
+
+
+#### Response Body Object Structure
+Array of brief user objects
+```Javascript
+  [
+    {
+    username,
+    name,
+    avatar
+    },
+    ...
+  ]
+
+ ```
+---
+
+## 📍 `/follow/following`
+### get user followings
+⚠️**Auth Required** 
+
+#### HTTP Request Method:
+
+- `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `id`   | String        | The identifier string of the user to get followers for. |
+
+
+#### Request Body Object Structure:
+- No Request body
+
+
+#### Response Body Object Structure
+Array of brief user objects
+```Javascript
+  [
+    {
+    username,
+    name,
+    avatar
+    },
+    ...
+  ]
+ ```
+---
+
