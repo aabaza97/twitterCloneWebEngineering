@@ -363,4 +363,35 @@ Array of brief user objects
   ]
  ```
 ---
+## 📍 `/search`
+### searches for users. 
+#### HTTP Request Method:
+
+- `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `query`   | String        | The search query string. |
+#### Request Body Object Structure:
+- No Request body
+
+
+#### Response Body Object Structure
+Array of brief user objects
+```Javascript
+  [
+    {
+    username,
+    name,
+    avatar
+    },
+    ...
+  ]
+ ```
+---
+
+
+
 
