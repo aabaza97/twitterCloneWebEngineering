@@ -5,7 +5,7 @@ import fs = require('fs')
 const Busboy = require('busboy')
 const uploadMedia = require('../StorageUtils/uploadMedia')
 
-module.exports = async (req: any, res :Response, next: NextFunction) => {
+module.exports = async (req: any,res:Response, next: NextFunction) => {
 
   try{
     const busboy =  Busboy({headers: req.headers})
@@ -61,6 +61,7 @@ module.exports = async (req: any, res :Response, next: NextFunction) => {
       const storedDataURLs = await uploadMedia(uploads)
       
       req.files = storedDataURLs
+       
       next()
 
       for (const file in uploads) {

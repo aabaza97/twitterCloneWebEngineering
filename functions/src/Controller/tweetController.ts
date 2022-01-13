@@ -1,9 +1,7 @@
-import {Response} from "express";
+import {Response,Request} from "express";
 import {db} from "../config/firebase";
 
-type Request = {
-  body: Tweet
-}
+
 
 const colName = "tweets";
 
