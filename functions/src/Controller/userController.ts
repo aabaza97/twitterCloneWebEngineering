@@ -42,7 +42,7 @@ const getUser = async (req:Request,res: Response) => {  //no auth
 const searchUser = async (req:Request, res: Response) => { //no auth
     try {
         const query =  req.params.query
-        const snapshot =  await userCollection.where('username','>=',`${query}`).select('username','name','avatar').limit(7).get()
+        const snapshot =  await userCollection.orderBy('username').startAt(query).endAt(query + '~').select('username','name','avatar').limit(7).get()
 
         
         //
