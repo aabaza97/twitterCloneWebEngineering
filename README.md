@@ -18,10 +18,19 @@ This  `REST API` is built using `Serverless Architecture` with the help of `Fire
 # 🛠 Usage & EndPoints
 To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
 
+## 🥷 Authorization
+Some of the requests below are labeled **'Auth Required'**, these require user authorizing before executing.  
+⚠️ **A token must provided in the request header:** ⚠️  
+  
+  
+  'Authorization' : *Token* 
 
 
 ## 📍 `/user` 
-This end point is responsible for creating a user's account
+This endpoint is responsible for 3 cases:
+
+### 1️⃣. Creating new user.   
+⚠️**Auth Required**     
 
 #### HTTP Request Method
 - `POST Request`
@@ -37,7 +46,6 @@ This end point is responsible for creating a user's account
     email : string       
     username : string      
     birthdate : string   
-    token : firbaseAuth.UserObject.idToken
 }
 ```
     
@@ -62,6 +70,88 @@ This end point is responsible for creating a user's account
  ```
 
 -----
+### 2️⃣. Fetching user attributes
+
+ 
+
+#### HTTP Request Method
+- `GET Request`
+
+#### Request Params. 
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `username`   | String        | The identifier username for user (@username). |
+
+#### Request Body Object Structure. 
+
+- There's no request body for this operation.  
+
+#### Response Body Object Structure
+```Javascript
+{  
+    id : string   
+    email: string   
+    name: string   
+    username: string   
+    avatar : string   
+    coverPhoto : string   
+    bio : string    
+    location : string   
+    birthdate : string   
+    followers : number   
+    following : number   
+    tweetsNo : number   
+    creationDate : string   
+  
+ }
+ ```
+
+-----
+### 3️⃣. updating user attributes
+
+⚠️**Auth Required**  
+
+#### HTTP Request Method
+- `PATCH Request`
+
+#### Request Params. 
+- There're no request params for this case.
+
+#### Request Body Object Structure. 
+
+Each update should be listed in body object
+```Javascript
+{
+    avatar : file       
+    name : string      
+    birthdate : string   
+}
+```   
+
+#### Response Body Object Structure
+```Javascript
+{  
+    id : string   
+    email: string   
+    name: string   
+    username: string   
+    avatar : string   
+    coverPhoto : string   
+    bio : string    
+    location : string   
+    birthdate : string   
+    followers : number   
+    following : number   
+    tweetsNo : number   
+    creationDate : string   
+  
+ }
+ ```
+
+-----
+
+
 
 ## 📍 `/tweets`
 This endpoint is responsible for 3 cases:
