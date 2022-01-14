@@ -1,5 +1,5 @@
 
-import {Response, Request, json} from "express";
+import {Response, Request} from "express";
 import {admin, db} from "../config/firebase";
 
 
@@ -25,7 +25,7 @@ const composeTweet = async (req:Request, res: Response) => {
       repostCount: 0,
       repliesCount: 0,
       likesCount: 0,
-      repostToPostId: "",
+      repostToPostId: "" ,
       location: location,
       timestamp: timestamp,
       mediaType: mediaType,
@@ -40,7 +40,9 @@ const composeTweet = async (req:Request, res: Response) => {
       data: newTweet,
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -53,7 +55,9 @@ const getAllTweets =async (req:Request, res: Response) => {
     snapshot.forEach((doc: any) => tweetsList.push(doc.data()));
     return res.status(200).json(tweetsList);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -71,7 +75,9 @@ const getTweet = async (req:Request, res: Response) => {
     }
     return res.status(200).json(response);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -87,7 +93,9 @@ const deleteTweet =async (req:Request, res: Response) => {
       message: "Tweet deleted successfully."
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -105,7 +113,9 @@ const getUserTweets = async (req:Request, res: Response) => {
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
     return res.status(200).json(userTweetsList);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -159,7 +169,9 @@ const replyToTweet = async (req:Request, res: Response) => {
       repliesCount: (repliesCount + 1)
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -195,7 +207,7 @@ const retweetTweet = async (req:Request, res: Response) => {
     batch.set(retweetDoc, newRetweet);
 
     //updating original tweet...
-    const tweetDoc =tweetsCollection.doc(id);
+    const tweetDoc =tweetsCollection.doc(tweetId);
     batch.update(tweetDoc, "repostCount", admin.firestore.FieldValue.increment(1));
 
     //committing batch...
@@ -205,10 +217,12 @@ const retweetTweet = async (req:Request, res: Response) => {
     return res.status(200).send({
       status: "success",
       data: retweetDoc,
-      tweetId: id
+      tweetId: tweetId
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -224,7 +238,9 @@ const getTweetReplies = async (req:Request, res: Response) => {
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
     return res.status(200).json(userTweetsList);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -275,7 +291,9 @@ const likeTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -306,7 +324,9 @@ const dislikeTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -331,7 +351,9 @@ const bookmarkTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -348,7 +370,9 @@ const unmarkTweet = async (req:Request, res: Response) => {
       forUser: userId
     });
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
@@ -370,7 +394,9 @@ const getUserBookmarks = async (req:Request, res: Response) => {
     
     return res.status(200).json(userBookmarkedTweetsList);
   } catch (error) {
-    return res.status(500).json(error.message);
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
   }
 };
 
