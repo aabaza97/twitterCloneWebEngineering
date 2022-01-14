@@ -1,22 +1,18 @@
+
 import {Response, Request, json} from "express";
 import {admin, db} from "../config/firebase";
 
 
-// type CRequest: Request = {
-//   body: Tweet
-//   params: {id: string}
-// }
-
-const colName = "tweets";
-const likesColName = "user_tweet_likes";
-const bookmarksColName = "user_tweet_bookmarks";
+const tweetsCollection = db.collection("tweets");
+const likesCollection =  db.collection("user_tweet_likes");
+const bookmarksCollection =  db.collection("user_tweet_bookmarks");
 
 //POST request /tweets
 const composeTweet = async (req:Request, res: Response) => {
   const {text, userId, hasMedia, hasMention, location, timestamp, mediaType} = req.body;
   try {
     // reference to the new document to be added in the collection specified.
-    const tweetDoc = db.collection(colName).doc();
+    const tweetDoc = tweetsCollection.doc();
     // tweet an object of the data to be set in the newly added document.
     const newTweet = {
       id: tweetDoc.id,
@@ -53,7 +49,7 @@ const composeTweet = async (req:Request, res: Response) => {
 const getAllTweets =async (req:Request, res: Response) => {
   try {
     const tweetsList: Tweet[] = [];
-    const snapshot = await db.collection(colName).get();
+    const snapshot = await tweetsCollection.get();
     snapshot.forEach((doc: any) => tweetsList.push(doc.data()));
     return res.status(200).json(tweetsList);
   } catch (error) {
@@ -66,7 +62,7 @@ const getAllTweets =async (req:Request, res: Response) => {
 const getTweet = async (req:Request, res: Response) => {
   const {id} = req.params;
   try {
-    const tweetSnapshot = await db.collection(colName).doc(id).get();
+    const tweetSnapshot = await tweetsCollection.doc(id).get();
     const tweetReplies = await getTweetRepliesforTweetWithId(id);
 
     const response = {
@@ -84,7 +80,7 @@ const getTweet = async (req:Request, res: Response) => {
 const deleteTweet =async (req:Request, res: Response) => {
   const {id} = req.params;
   try {
-    const tweetDoc = db.collection(colName).doc(id);
+    const tweetDoc = tweetsCollection.doc(id);
     await tweetDoc.delete();
     return res.status(200).json({
       status: "success",
@@ -103,7 +99,7 @@ const getUserTweets = async (req:Request, res: Response) => {
     // run a query over the tweets collection
     // to get all tweets composed by him given the id.
     const userTweetsList: Tweet[] = [];
-    const querySnapshot = await db.collection(colName)
+    const querySnapshot = await tweetsCollection
         .where("userId", "==", id)
         .get();
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
@@ -126,7 +122,7 @@ const replyToTweet = async (req:Request, res: Response) => {
     const batch = db.batch();
 
     //adding reply document...
-    const replyDoc = db.collection(colName).doc();
+    const replyDoc = tweetsCollection.doc();
     const newReply = {
       id: replyDoc.id,
       text: text,
@@ -149,7 +145,7 @@ const replyToTweet = async (req:Request, res: Response) => {
 
 
     //updating replies count in tweet's doc...
-    const tweetDoc = db.collection(colName).doc(tweetId);
+    const tweetDoc = tweetsCollection.doc(tweetId);
     batch.update(tweetDoc, "repliesCount", admin.firestore.FieldValue.increment(1));
 
 
@@ -177,7 +173,7 @@ const retweetTweet = async (req:Request, res: Response) => {
     const batch = db.batch();
 
     //creating new repost...
-    const retweetDoc = db.collection(colName).doc();
+    const retweetDoc = tweetsCollection.doc();
     const newRetweet = {
       id: retweetDoc.id,
       text: text,
@@ -199,7 +195,7 @@ const retweetTweet = async (req:Request, res: Response) => {
     batch.set(retweetDoc, newRetweet);
 
     //updating original tweet...
-    const tweetDoc = db.collection(colName).doc(id);
+    const tweetDoc =tweetsCollection.doc(id);
     batch.update(tweetDoc, "repostCount", admin.firestore.FieldValue.increment(1));
 
     //committing batch...
@@ -219,11 +215,11 @@ const retweetTweet = async (req:Request, res: Response) => {
 
 //GET request /replies/tweetId
 const getTweetReplies = async (req:Request, res: Response) => {
-  const {tweetIdid} = req.params;
+  const {tweetId} = req.params;
   try {
     const userTweetsList: Tweet[] = [];
-    const querySnapshot = await db.collection(colName)
-        .where("replyToPostId", "==", id)
+    const querySnapshot = await tweetsCollection
+        .where("replyToPostId", "==", tweetId)
         .get();
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
     return res.status(200).json(userTweetsList);
@@ -236,7 +232,7 @@ const getTweetReplies = async (req:Request, res: Response) => {
 const getTweetRepliesforTweetWithId = async (tweetId: string) => {
   try {
     const userTweetsList: Tweet[] = [];
-    const querySnapshot = await db.collection(colName)
+    const querySnapshot = await tweetsCollection
         .where("replyToPostId", "==", tweetId)
         .get();
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
@@ -262,11 +258,11 @@ const likeTweet = async (req:Request, res: Response) => {
     };
 
     //creating a like reference document in the likes collection... 
-    const likeDocRef = db.collection(likesColName).doc(likeCustomId);
+    const likeDocRef = likesCollection.doc(likeCustomId);
     batch.set(likeDocRef, newLike);
 
     //increasing the count inside the tweet's doc...
-    const tweetDoc = db.collection(colName).doc(tweetId);
+    const tweetDoc = likesCollection.doc(tweetId);
     batch.update(tweetDoc, "likesCount", admin.firestore.FieldValue.increment(1));
 
     //commiting the batch...
@@ -294,11 +290,11 @@ const dislikeTweet = async (req:Request, res: Response) => {
     const likeCustomId = tweetId + "_" + userId;
    
     //creating a like reference document in the likes collection... 
-    const likeDocRef = db.collection(likesColName).doc(likeCustomId);
+    const likeDocRef = likesCollection.doc(likeCustomId);
     batch.delete(likeDocRef);
 
     //increasing the count inside the tweet's doc...
-    const tweetDoc = db.collection(colName).doc(tweetId);
+    const tweetDoc = tweetsCollection.doc(tweetId);
     batch.update(tweetDoc, "likesCount", admin.firestore.FieldValue.increment(-1));
 
     //commiting the batch...
@@ -320,7 +316,7 @@ const bookmarkTweet = async (req:Request, res: Response) => {
   const {userId, timestamp} = req.body;
   try {
     const bookmarkCustomId = tweetId + "_" + userId;
-    const bookmarkDoc = db.collection(bookmarksColName).doc(bookmarkCustomId);
+    const bookmarkDoc = bookmarksCollection.doc(bookmarkCustomId);
     const newBookmark = {
       tweetId: tweetId,
       userId: userId,
@@ -345,7 +341,7 @@ const unmarkTweet = async (req:Request, res: Response) => {
   const {userId} = req.body;
   try {
     const bookmarkCustomId = tweetId + "_" + userId;
-    await db.collection(bookmarksColName).doc(bookmarkCustomId).delete();
+    await bookmarksCollection.doc(bookmarkCustomId).delete();
     return res.status(200).json({
       description: "Delete Bookmark Success",
       tweetId: tweetId,
@@ -363,14 +359,12 @@ const getUserBookmarks = async (req:Request, res: Response) => {
   try {
     const userBookmarkedTweetsList = [];
 
-    const querySnapshot = await db.collection(bookmarksColName)
-        .where("userId", "==", userId)
-        .get();
+    const querySnapshot = await bookmarksCollection.where("userId", "==", userId).get();
     
     
     for (const doc of querySnapshot.docs) {
       const tweetId = doc.id.split("_")[0];
-      const tweet = await db.collection(colName).doc(tweetId).get();
+      const tweet = await tweetsCollection.doc(tweetId).get();
       userBookmarkedTweetsList.push(tweet.data());
     }
     

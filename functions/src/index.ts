@@ -1,32 +1,50 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
-import {bookmarkTweet, composeTweet, deleteTweet, dislikeTweet, getAllTweets, getTweet, getTweetReplies, getUserBookmarks, getUserTweets, likeTweet, replyToTweet, retweetTweet, unmarkTweet} from "./Controller/tweetController";
-import {createUser} from "./Controller/userController";
+import * as Tweet from "./Controller/tweetController";
+import * as User from './Controller/userController'
+import * as Follows from './Controller/followsController'
 import * as cors from "cors";
-const mediaToURL = require('./middleware/mediaToURL');
 
-const App = express();
+const mediaToURL = require('./middleware/mediaToURL');
+const passAuth = require('./middleware/passAuth')
+
 const corsHandler = cors({origin: true});
+const App = express();
+
+
 App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello tweeter ;p"));
-App.post("/tweets", composeTweet);
-App.get("/tweets", getAllTweets);
-App.delete("/tweets/:id", deleteTweet);
-App.get("/tweet/:id", getTweet);
-App.get("/profile/:id", getUserTweets);
-App.post("/reply/:tweetId", replyToTweet);
-App.post("/retweet/:tweetId", retweetTweet);
-App.get("/replies/:tweetId", getTweetReplies);
-App.post("/like/:tweetId", likeTweet);
-App.delete("/like/:tweetId", dislikeTweet);
-App.post("/bookmark/:tweetId", bookmarkTweet);
-App.delete("/bookmark/:tweetId", unmarkTweet);
-App.get("/bookmark/:userId", getUserBookmarks);
+App.post("/tweets", Tweet.composeTweet);
+App.get("/tweets", Tweet.getAllTweets);
+App.delete("/tweets/:id", Tweet.deleteTweet);
+App.get("/tweet/:id", Tweet.getTweet);
+App.get("/profile/:id", Tweet.getUserTweets);
+App.post("/reply/:tweetId", Tweet.replyToTweet);
+App.post("/retweet/:tweetId", Tweet.retweetTweet);
+App.get("/replies/:tweetId", Tweet.getTweetReplies);
+App.post("/like/:tweetId", Tweet.likeTweet);
+App.delete("/like/:tweetId", Tweet.dislikeTweet);
+App.post("/bookmark/:tweetId", Tweet.bookmarkTweet);
+App.delete("/bookmark/:tweetId", Tweet.unmarkTweet);
+App.get("/bookmark/:userId", Tweet.getUserBookmarks);
 
 
-App.post("/user", mediaToURL, createUser);
+
+App.get("/search/:query",User.searchUser) //search usernames
+App.get("/user/:username",User.getUser) //fetch user object for profile displaying
+App.post('/user',mediaToURL,passAuth,User.createUser)
+App.patch('/user',passAuth,mediaToURL,User.updateUser)
+
+App.post("/follow/:id",passAuth,Follows.followUser) //auth 
+App.delete("/follow/:id",passAuth,Follows.unfollowUser) //auth
+App.get("/follow/following/:id",Follows.getFollowing) //auth
+App.get("/follow/followers/:id",Follows.getFollowers) //auth
+
+
 App.use(corsHandler);
+
+
 
 exports.App = functions.https.onRequest(App);
 
