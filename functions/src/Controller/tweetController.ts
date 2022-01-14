@@ -1,5 +1,4 @@
 import {Response, Request, json} from "express";
-import { analytics } from "firebase-functions/v1";
 import {admin, db} from "../config/firebase";
 
 
