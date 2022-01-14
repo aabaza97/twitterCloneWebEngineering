@@ -67,7 +67,7 @@ const searchUser = async (req:Request, res: Response) => { //no auth
 
 const updateUser = async (req:any, res: Response) => {
     try {
-        const updates = {
+        const updates: any = {
             name: req.body.name,
             birthdate: req.body.birthdate,
             avatar: req.files.avatar,
