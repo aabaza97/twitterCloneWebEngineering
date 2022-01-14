@@ -20,7 +20,7 @@ type Tweet = {
 
 
 enum MediaType {
-     video,
+     Video,
      Picture,
      Audio
 }
