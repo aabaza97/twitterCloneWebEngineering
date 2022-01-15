@@ -183,11 +183,14 @@ This endpoint is responsible for 3 cases:
 
 - The `mediaType` enum is structured as follows
 ```Javascript
+//Important to be used in the same order... 
 enum MediaType {
      Video,
      Picture,
-     Audio
+     Audio,
+     None
 }
+
 ```
 
 ----
@@ -439,7 +442,7 @@ This endpoint is responsible for 3 cases:
 ```javascript
 {
   "userId": "someUserId",
-  "timestamp: Timestamp
+  "timestamp": Timestamp
 }
 ```
 
@@ -641,6 +644,49 @@ This endpoint is responsible for sending a reply to a tweet.
 - An entire `Tweet object`
 
 ----
-#⚠️ **FILES NOTES** 
-If the operation request from server contains files, it's a **MUST** to send throught the files property of the request.
+# 🕸 Data Structure
+
+## Tweet
+```javascript
+{
+    id: string
+    text: string
+    userId: string
+    postPrivacy: string
+    hasMedia: boolean
+    mediaType: MediaType
+    mediaContent: string[]
+    hasMention: boolean
+    isRepost: boolean
+    repostToPostId: string
+    isReply: boolean
+    replyToPostId: string
+    likesCount: number
+    repliesCount: number
+    repostCount: number
+    location: string
+    timestamp: number
+
+}
+```
+
+## User
+
+```javascript
+{
+    id : string
+    email: string
+    name: string
+    username: string
+    avatar : string
+    coverPhoto : string
+    bio : string
+    location : string
+    birthdate : string
+    followers : number
+    following : number
+    tweetsNo : number
+    creationDate : string
+}
+```
 
