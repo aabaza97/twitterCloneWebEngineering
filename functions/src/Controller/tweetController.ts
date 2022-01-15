@@ -9,7 +9,8 @@ const bookmarksCollection =  db.collection("user_tweet_bookmarks");
 
 //POST request /tweets
 const composeTweet = async (req:Request, res: Response) => {
-  const {text, userId, hasMedia, hasMention, location, timestamp, mediaType} = req.body;
+  const {text, userId, hasMention, location, timestamp, mediaType} = req.body;
+  const files = req.files
   try {
     // reference to the new document to be added in the collection specified.
     const tweetDoc = tweetsCollection.doc();
@@ -19,7 +20,8 @@ const composeTweet = async (req:Request, res: Response) => {
       text: text,
       userId: userId,
       postPrivacy: "",
-      hasMedia: hasMedia,
+      hasMedia: files ? true : false,
+      mediaContent: files || [],
       hasMention: hasMention,
       isRepost: false,
       repostCount: 0,
@@ -124,9 +126,10 @@ const getUserTweets = async (req:Request, res: Response) => {
 const replyToTweet = async (req:Request, res: Response) => {
   const {tweetId} = req.params;
   const {
-    text, userId, postPrivacy, hasMedia, hasMention, repostCount, 
-    repliesCount, likesCount, timestamp, mediaType} = req.body;
-
+    text, userId, postPrivacy, hasMention, repostCount, 
+    repliesCount, likesCount, timestamp, mediaType
+  } = req.body;
+  const files = req.files
   try {
     //creating a batch...
     const batch = db.batch();
@@ -138,7 +141,8 @@ const replyToTweet = async (req:Request, res: Response) => {
       text: text,
       userId: userId,
       postPrivacy: postPrivacy,
-      hasMedia: hasMedia,
+      hasMedia: files ? true : false,
+      mediaContent: files || [],
       hasMention: hasMention,
       isRepost: false,
       repostCount: repostCount,
@@ -178,8 +182,8 @@ const replyToTweet = async (req:Request, res: Response) => {
 //POST request /retweet/:tweetId
 const retweetTweet = async (req:Request, res: Response) => {
   const {tweetId} = req.params;
-  const { text, userId, hasMedia, hasMention, location, timestamp, mediaType} = req.body;
-
+  const { text, userId, hasMention, location, timestamp, mediaType} = req.body;
+  const files = req.files
   try {
     //creating a batch...
     const batch = db.batch();
@@ -191,7 +195,8 @@ const retweetTweet = async (req:Request, res: Response) => {
       text: text,
       userId: userId,
       postPrivacy: "",
-      hasMedia: hasMedia,
+      hasMedia: files ? true : false,
+      mediaContent: files || [],
       hasMention: hasMention,
       isRepost: true,
       repostCount: 0,
