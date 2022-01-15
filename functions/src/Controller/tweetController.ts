@@ -126,8 +126,7 @@ const getUserTweets = async (req:Request, res: Response) => {
 const replyToTweet = async (req:Request, res: Response) => {
   const {tweetId} = req.params;
   const {
-    text, userId, postPrivacy, hasMention, repostCount, 
-    repliesCount, likesCount, timestamp, mediaType
+    text, userId, hasMention, timestamp, mediaType, repliesCount
   } = req.body;
   const files = req.files
   try {
@@ -140,14 +139,14 @@ const replyToTweet = async (req:Request, res: Response) => {
       id: replyDoc.id,
       text: text,
       userId: userId,
-      postPrivacy: postPrivacy,
+      postPrivacy: "",
       hasMedia: files ? true : false,
       mediaContent: files || [],
       hasMention: hasMention,
       isRepost: false,
-      repostCount: repostCount,
-      repliesCount: repliesCount,
-      likesCount: likesCount,
+      repostCount: 0,
+      repliesCount: 0,
+      likesCount: 0,
       repostToPostId: "",
       location: location,
       timestamp: timestamp,
@@ -275,7 +274,7 @@ const likeTweet = async (req:Request, res: Response) => {
     const newLike = {
       tweetId: tweetId,
       userId: userId,
-      timestamp: admin.firestore.Timestamp
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
     };
 
     //creating a like reference document in the likes collection... 
@@ -283,7 +282,7 @@ const likeTweet = async (req:Request, res: Response) => {
     batch.set(likeDocRef, newLike);
 
     //increasing the count inside the tweet's doc...
-    const tweetDoc = likesCollection.doc(tweetId);
+    const tweetDoc = tweetsCollection.doc(tweetId);
     batch.update(tweetDoc, "likesCount", admin.firestore.FieldValue.increment(1));
 
     //commiting the batch...
@@ -381,7 +380,7 @@ const unmarkTweet = async (req:Request, res: Response) => {
   }
 };
 
-//GET request with params containing {tweetId, userId} to /bookmark
+//GET request with params containing {userId} to /bookmark
 const getUserBookmarks = async (req:Request, res: Response) => {
   const {userId} = req.params
 
