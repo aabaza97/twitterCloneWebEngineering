@@ -263,6 +263,7 @@ This endpoint is responsible for fetching a single tweet's data.
     "tweetReplies": [] //array of tweet objects
 }
 ```
+----
 
 ## 📍 `/profile`
 This endpoint is responsible for loading the tweets of a single user.
@@ -278,6 +279,8 @@ This endpoint is responsible for loading the tweets of a single user.
 
 #### Request Body:
 - There's no request body for this operation.
+
+-----
 
 ## 📍 `/follow`
 This endpoint is responsible for 2 cases:
@@ -327,7 +330,9 @@ success or error message
 ```Javascript
 success or error message
  ```
----
+
+----
+
 ## 📍 `/follow/followers`
 ### get user followers
 ⚠️**Auth Required** 
@@ -360,7 +365,8 @@ Array of brief user objects
   ]
 
  ```
----
+
+----
 
 ## 📍 `/follow/following`
 ### get user followings
@@ -393,7 +399,8 @@ Array of brief user objects
     ...
   ]
  ```
----
+
+----
 ## 📍 `/search`
 ### searches for users. 
 #### HTTP Request Method:
@@ -421,7 +428,7 @@ Array of `brief user objects`
     ...
   ]
  ```
----
+----
 
 ## 📍 `/bookmark`
 This endpoint is responsible for 3 cases:
