@@ -16,7 +16,9 @@ This  `REST API` is built using `Serverless Architecture` with the help of `Fire
 
 
 # 🛠 Usage & EndPoints
-To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
+- To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
+- 🚑 **HTTP Requests must submit a `Content-Type` of `multipart/form-data`**
+
 
 ## 🥷 Authorization
 Some of the requests below are labeled **'Auth Required'**, these require user authorizing before executing.  
