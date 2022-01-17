@@ -6,8 +6,7 @@ import * as Follows from './Controller/followsController'
 import * as cors from "cors";
 
 const mediaToURL = require('./middleware/mediaToURL');
-const passAuth = require('./middleware/passAuth')
-
+const authorize = require('./middleware/auth')
 const corsHandler = cors({origin: true});
 const App = express();
 
@@ -15,7 +14,7 @@ const App = express();
 App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello tweeter ;p"));
-App.post("/tweets", Tweet.composeTweet);
+App.post("/tweets",mediaToURL, Tweet.composeTweet);
 App.get("/tweets", Tweet.getAllTweets);
 App.delete("/tweets/:id", Tweet.deleteTweet);
 App.get("/tweet/:id", Tweet.getTweet);
@@ -30,16 +29,15 @@ App.delete("/bookmark/:tweetId", Tweet.unmarkTweet);
 App.get("/bookmark/:userId", Tweet.getUserBookmarks);
 
 
-
 App.get("/search/:query",User.searchUser) //search usernames
 App.get("/user/:username",User.getUser) //fetch user object for profile displaying
-App.post('/user',mediaToURL,passAuth,User.createUser)
-App.patch('/user',passAuth,mediaToURL,User.updateUser)
+App.post('/user',authorize,mediaToURL,User.createUser)
+App.patch('/user',authorize,mediaToURL,User.updateUser)
 
-App.post("/follow/:id",passAuth,Follows.followUser) //auth 
-App.delete("/follow/:id",passAuth,Follows.unfollowUser) //auth
-App.get("/follow/following/:id",Follows.getFollowing) //auth
-App.get("/follow/followers/:id",Follows.getFollowers) //auth
+App.post("/follow/:id",authorize,Follows.followUser) //auth 
+App.delete("/follow/:id",authorize,Follows.unfollowUser) //auth
+App.get("/follow/following/:id",authorize,Follows.getFollowing) //auth
+App.get("/follow/followers/:id",authorize,Follows.getFollowers) //auth
 
 
 App.use(corsHandler);
