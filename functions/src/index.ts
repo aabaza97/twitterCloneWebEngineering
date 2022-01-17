@@ -14,13 +14,13 @@ const App = express();
 App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello tweeter ;p"));
-App.post("/tweets",mediaToURL, Tweet.composeTweet);
+App.post("/tweets", mediaToURL, Tweet.composeTweet);
 App.get("/tweets", Tweet.getAllTweets);
 App.delete("/tweets/:id", Tweet.deleteTweet);
 App.get("/tweet/:id", Tweet.getTweet);
 App.get("/profile/:id", Tweet.getUserTweets);
-App.post("/reply/:tweetId", Tweet.replyToTweet);
-App.post("/retweet/:tweetId", Tweet.retweetTweet);
+App.post("/reply/:tweetId", mediaToURL, Tweet.replyToTweet);
+App.post("/retweet/:tweetId", mediaToURL, Tweet.retweetTweet);
 App.get("/replies/:tweetId", Tweet.getTweetReplies);
 App.post("/like/:tweetId", Tweet.likeTweet);
 App.delete("/like/:tweetId", Tweet.dislikeTweet);

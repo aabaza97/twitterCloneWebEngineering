@@ -4,7 +4,7 @@ This repo is intended to be the home for the backend API of the final project fo
 
 
 # 🥚 Introduction: 
-This  `REST API` is built using `Serverless Architecture` with the help of `Firebase` and `ExpressJS`. This means that the entirety of the express application is running through the Firebase cloud service as a Cloud Function. Obviously, this decision was made to simplify the deployment process as much as possible so that the focus remains of the development on the development of the application itself.
+This  `REST API` is built using `Serverless Architecture` with the help of `Firebase` and `ExpressJS`. This means that the entirety of the express application is running through the Firebase cloud service as a Cloud Function. Obviously, this decision was made to simplify the deployment process as much as possible so that the focus remains on the development of the application itself.
 
 # 📟 Tech Stack: 
 - `Firebase Authentication` (*_serving as a secure way to both authenticate and authorise users_*)
@@ -16,7 +16,9 @@ This  `REST API` is built using `Serverless Architecture` with the help of `Fire
 
 
 # 🛠 Usage & EndPoints
-To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
+- To start using this API, an HTTP Request must be made to one of the following endpoints. Make sure to read the notes to insure a issueless integration.
+- 🚑 **HTTP POST Requests must submit a `Content-Type` of `multipart/form-data`**
+
 
 ## 🥷 Authorization
 Some of the requests below are labeled **'Auth Required'**, these require user authorizing before executing.  
@@ -183,11 +185,14 @@ This endpoint is responsible for 3 cases:
 
 - The `mediaType` enum is structured as follows
 ```Javascript
+//Important to be used in the same order... 
 enum MediaType {
      Video,
      Picture,
-     Audio
+     Audio,
+     None
 }
+
 ```
 
 ----
@@ -218,7 +223,7 @@ enum MediaType {
 -----
 
 ## 📍 `/tweet`
-This endpoint is responsible for loading a single tweet.
+This endpoint is responsible for fetching a single tweet's data.
 
 #### HTTP Request Method:
 -  `GET Request`
@@ -232,6 +237,35 @@ This endpoint is responsible for loading a single tweet.
 #### Request Body:
 - There's no request body for this operation.
 
+#### Response Object Structure: 
+
+```Javascript
+{
+    "tweetData": {
+        "replyToPostId": "",
+        "isRepost": false,
+        "location": "location",
+        "repliesCount": 0,
+        "text": "some valid words",
+        "postPrivacy": "",
+        "repostCount": 0,
+        "mediaContent": {
+            "image_1": "urlstring"
+        },
+        "likesCount": 0,
+        "userId": "string",
+        "isReply": false,
+        "hasMention": "hasMention",
+        "id": "tweetId",
+        "timestamp": "1231231231",
+        "repostToPostId": "",
+        "mediaType": "2",
+        "hasMedia": true
+    },
+    "tweetReplies": [] //array of tweet objects
+}
+```
+----
 
 ## 📍 `/profile`
 This endpoint is responsible for loading the tweets of a single user.
@@ -247,6 +281,8 @@ This endpoint is responsible for loading the tweets of a single user.
 
 #### Request Body:
 - There's no request body for this operation.
+
+-----
 
 ## 📍 `/follow`
 This endpoint is responsible for 2 cases:
@@ -296,7 +332,9 @@ success or error message
 ```Javascript
 success or error message
  ```
----
+
+----
+
 ## 📍 `/follow/followers`
 ### get user followers
 ⚠️**Auth Required** 
@@ -329,7 +367,8 @@ Array of brief user objects
   ]
 
  ```
----
+
+----
 
 ## 📍 `/follow/following`
 ### get user followings
@@ -362,7 +401,8 @@ Array of brief user objects
     ...
   ]
  ```
----
+
+----
 ## 📍 `/search`
 ### searches for users. 
 #### HTTP Request Method:
@@ -379,7 +419,7 @@ Array of brief user objects
 
 
 #### Response Body Object Structure
-Array of brief user objects
+Array of `brief user objects`
 ```Javascript
   [
     {
@@ -390,8 +430,272 @@ Array of brief user objects
     ...
   ]
  ```
----
+----
+
+## 📍 `/bookmark`
+This endpoint is responsible for 3 cases:
+
+### 1️⃣. Bookmark a tweet
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet. |
+
+#### Request Body Object Structure:
+```javascript
+{
+  "userId": "someUserId",
+  "timestamp": Timestamp
+}
+```
+
+### 2️⃣. Remove a bookemarked tweet
+
+#### HTTP Request Method:
+
+- `Delete Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet to bookmark. |
+
+#### Request Body Object Structure:
+```javascript
+{
+  "userId": "someUserId"
+}
+```
+
+
+### 3️⃣. Fetch a user bookemarked tweets
+
+#### HTTP Request Method:
+
+- `Delete Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `userId`   | String        | The string identifier of the user to fetch the bookmarks for. |
+
+#### Request Body Object Structure:
+- No request Body
+
+#### Response Body Object Structure
+- An array of `tweet objects`.
+```javascript
+[
+  {
+        "replyToPostId": "",
+        "isRepost": false,
+        "location": "location",
+        "repliesCount": 0,
+        "text": "some valid words",
+        "postPrivacy": "",
+        "repostCount": 0,
+        "mediaContent": {
+            "image_1": "urlstring"
+        },
+        "likesCount": 0,
+        "userId": "string",
+        "isReply": false,
+        "hasMention": "hasMention",
+        "id": "tweetId",
+        "timestamp": "1231231231",
+        "repostToPostId": "",
+        "mediaType": "2",
+        "hasMedia": true
+    },...
+]
+```
+
+
+----
+
+## 📍 `/like`
+This endpoint is responsible for 2 cases:
+
+### 1️⃣. Like a tweet
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet to like. |
+
+#### Request Body Object Structure:
+```javascript
+{
+  "userId": "someUserId"
+}
+```
+
+
+### 2️⃣. Unlike a liked tweet
+
+#### HTTP Request Method:
+
+- `DELETE Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet to unlike. |
+
+#### Request Body Object Structure:
+```javascript
+{
+  "userId": "someUserId"
+}
+```
 
 
 
+----
+
+## 📍 `/replies`
+This endpoint is responsible for fetching the reply tweets of a single tweet.
+
+#### HTTP Request Method:
+
+- `GET Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifier of the tweet to get the replies for. |
+
+#### Request Body Object Structure:
+- No request body.
+
+#### Response Body Object Structure:
+- An array of `Tweet objects`
+```javascript
+[
+  {
+    "replyToPostId": "sometweetId", //the id of the tweet the reply was composed for.
+    "isRepost": false,
+    "location": "location",
+    "repliesCount": 0,
+    "text": "some valid words",
+    "postPrivacy": "",
+    "repostCount": 0,
+    "mediaContent": {
+        "image_1": "urlstring"
+    },
+    "likesCount": 0,
+    "userId": "string",
+    "isReply": true,
+    "hasMention": "hasMention",
+    "id": "tweetId",
+    "timestamp": "1231231231",
+    "repostToPostId": "", 
+    "mediaType": "2",
+    "hasMedia": true
+  }
+]
+```
+
+----
+
+## 📍 `/reply`
+This endpoint is responsible for sending a reply to a tweet.
+
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet to reply to. |
+
+#### Request Body Object Structure:
+- An entire `Tweet object`
+
+
+
+
+----
+
+## 📍 `/retweet`
+This endpoint is responsible for sending a reply to a tweet.
+
+
+#### HTTP Request Method:
+
+- `POST Request`
+
+#### Request Params:
+
+| Param         | Type          | Description  |
+| :-------------: |:-----------:|:-----|
+| `tweetId`   | String        | The string identifying the tweet to retweet. |
+
+#### Request Body Object Structure:
+- An entire `Tweet object`
+
+----
+# 🕸 Data Structure
+
+## Tweet
+```javascript
+{
+    id: string
+    text: string
+    userId: string
+    postPrivacy: string
+    hasMedia: boolean
+    mediaType: MediaType
+    mediaContent: string[]
+    hasMention: boolean
+    isRepost: boolean
+    repostToPostId: string
+    isReply: boolean
+    replyToPostId: string
+    likesCount: number
+    repliesCount: number
+    repostCount: number
+    location: string
+    timestamp: number
+
+}
+```
+
+## User
+
+```javascript
+{
+    id : string
+    email: string
+    name: string
+    username: string
+    avatar : string
+    coverPhoto : string
+    bio : string
+    location : string
+    birthdate : string
+    followers : number
+    following : number
+    tweetsNo : number
+    creationDate : string
+}
+```
 
