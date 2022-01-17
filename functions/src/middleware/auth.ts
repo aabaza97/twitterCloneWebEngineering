@@ -4,7 +4,7 @@ import {auth} from '../config/firebase'
 const authorize = async (req : any, res : Response ,next :NextFunction) => {
     try {
 
-        const idToken = req.header('Auhtorization')
+        const idToken = req.header('Authorization')
         const decodedIdToken = await auth.verifyIdToken(idToken)
         if(!decodedIdToken){
             return res.status(401).send('Error authenticating')

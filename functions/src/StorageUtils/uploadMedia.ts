@@ -6,6 +6,7 @@ interface valByString {
   }
 
 module.exports = async (mediaPaths:valByString) => {
+  try{
     const files : valByString = {}
     const metadata = {
         contentType: 'image/jpeg',
@@ -21,4 +22,7 @@ module.exports = async (mediaPaths:valByString) => {
         files[file] = url
     }
     return files
+  }catch(e){
+    console.log(e)
+  }
 }

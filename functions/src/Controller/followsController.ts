@@ -9,7 +9,6 @@ const followsCollection = db.collection('follows')
 const followUser = async (req: any, res: Response) => { // add auth middleware
     try {
         const batch = db.batch()
-        console.log(req.loggedId,req.body.id)
         const followedId = req.params.id
         const followerId = req.loggedId
         if(followedId === followerId){

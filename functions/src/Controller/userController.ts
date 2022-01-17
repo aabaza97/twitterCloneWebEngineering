@@ -7,11 +7,9 @@ import { Response,Request } from 'express'
 const userCollection = db.collection('Users')
 const createUser = async (req: any ,res: Response) => { //auth
     try{
-        
-        
+        req.body.id = req.loggedId
         const userDoc = userCollection.doc(req.loggedId)
         const user = new User({...req.body,...req.files})
-        console.log(user)
         await userDoc.set({...user})
         res.status(201).send(user)
   

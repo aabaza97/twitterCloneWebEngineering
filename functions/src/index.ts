@@ -7,10 +7,13 @@ import * as cors from "cors";
 
 const mediaToURL = require('./middleware/mediaToURL');
 const authorize = require('./middleware/auth')
-const corsHandler = cors({origin: true});
+const corsHandler = cors({
+    origin: true,
+    methods:"POST,GET,DELETE,PATCH,PUT"
+});
 const App = express();
 
-
+App.use(corsHandler)
 App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello tweeter ;p"));
