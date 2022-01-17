@@ -35,7 +35,7 @@ const composeTweet = async (req:Request, res: Response) => {
       replyToPostId: ""};
 
     // setting the tweet.
-    tweetDoc.set(newTweet);
+    await tweetDoc.set({newTweet});
     // responding with success status code along side data.
     return res.status(200).send({
       status: "success",
@@ -43,7 +43,8 @@ const composeTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json(error.message);
+      console.log({error: error.message,stack: error.stack});
+      return res.status(500).json({error: error.message,stack: error.stack});
     }
   }
 };
