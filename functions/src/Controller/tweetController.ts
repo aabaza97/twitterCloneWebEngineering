@@ -59,6 +59,7 @@ const getAllTweets =async (req:Request, res: Response) => {
     return res.status(200).json(tweetsList);
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -79,6 +80,7 @@ const getTweet = async (req:Request, res: Response) => {
     return res.status(200).json(response);
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -97,6 +99,7 @@ const deleteTweet =async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -117,6 +120,7 @@ const getUserTweets = async (req:Request, res: Response) => {
     return res.status(200).json(userTweetsList);
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -174,6 +178,7 @@ const replyToTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -226,6 +231,7 @@ const retweetTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -244,6 +250,7 @@ const getTweetReplies = async (req:Request, res: Response) => {
     return res.status(200).json(userTweetsList);
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -297,6 +304,7 @@ const likeTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -330,6 +338,7 @@ const dislikeTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -357,6 +366,7 @@ const bookmarkTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -376,6 +386,7 @@ const unmarkTweet = async (req:Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }
@@ -400,6 +411,7 @@ const getUserBookmarks = async (req:Request, res: Response) => {
     return res.status(200).json(userBookmarkedTweetsList);
   } catch (error) {
     if (error instanceof Error) {
+      console.log({error: error.message,stack: error.stack});
       return res.status(500).json(error.message);
     }
   }

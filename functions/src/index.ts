@@ -34,7 +34,7 @@ App.get("/bookmark/:userId", Tweet.getUserBookmarks);
 
 App.get("/search/:query",User.searchUser) //search usernames
 App.get("/user/:username",passAuth,User.getUser) //fetch user object for profile displaying
-App.post('/user',authorize,mediaToURL,User.createUser)
+App.post('/user',authorize,mediaToURL,User.createUser)  
 App.patch('/user',authorize,mediaToURL,User.updateUser)
 
 App.post("/follow/:id",authorize,Follows.followUser) //auth 
