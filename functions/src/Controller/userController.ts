@@ -5,6 +5,7 @@ import { Response,Request } from 'express'
 
 
 const userCollection = db.collection('Users')
+const followsCollection = db.collection('follows')
 const createUser = async (req: any ,res: Response) => { //auth
     try{
         req.body.id = req.loggedId
@@ -21,15 +22,22 @@ const createUser = async (req: any ,res: Response) => { //auth
     }
 }
 
-const getUser = async (req:Request,res: Response) => {  //no auth
+const getUser = async (req:any,res: Response) => {  //no auth //auth for isfollowed Bool
     try {
+        const logged = req.loggedId
         const username = req.params.username
         const snapshot = await userCollection.where('username' , '==',`${username}`).get()
         if(snapshot.empty){
             return res.status(404).send('Not Found')
         }
         const user = snapshot.docs[0].data()
-        return res.status(200).send(user)
+        const userId = user.id
+        if(logged){
+            const isfollowed =  (await followsCollection.doc(`${userId},${logged}`).get()).exists
+            const followingMe = await (await followsCollection.doc(`${logged},${userId}`).get()).exists
+            return res.status(200).send({...user,isfollowed,followingMe})
+        }
+        return res.status(200).send({...user,isfollowed:undefined,followingMe:undefined})
     } catch (error) {
         console.log(error)
         if(error instanceof Error)
