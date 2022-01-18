@@ -2,10 +2,22 @@
 import {Response, Request} from "express";
 import {admin, db} from "../config/firebase";
 
-
 const tweetsCollection = db.collection("tweets");
 const likesCollection =  db.collection("user_tweet_likes");
 const bookmarksCollection =  db.collection("user_tweet_bookmarks");
+
+const userCollection = db.collection('Users')
+
+
+const getUserWithId = async (userId:string) => {
+  try {
+      const userDoc = await userCollection.doc(userId).get();
+      return userDoc.data()
+  } catch (error) {
+      console.log(error)
+      return undefined
+  }
+}
 
 //POST request /tweets
 const composeTweet = async (req:Request, res: Response) => {
@@ -35,15 +47,15 @@ const composeTweet = async (req:Request, res: Response) => {
       replyToPostId: ""};
 
     // setting the tweet.
-    await tweetDoc.set({newTweet});
+    await tweetDoc.set(newTweet);
     // responding with success status code along side data.
     return res.status(200).send({
       status: "success",
       data: newTweet,
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
-      console.log({error: error.message,stack: error.stack});
       return res.status(500).json({error: error.message,stack: error.stack});
     }
   }
@@ -52,12 +64,21 @@ const composeTweet = async (req:Request, res: Response) => {
 //GET request /tweets
 // Gets all tweets from tweets collection.
 const getAllTweets =async (req:Request, res: Response) => {
+  const {userId} = req.params;
   try {
-    const tweetsList: Tweet[] = [];
+    const responseData: any[] = [];
     const snapshot = await tweetsCollection.get();
-    snapshot.forEach((doc: any) => tweetsList.push(doc.data()));
-    return res.status(200).json(tweetsList);
+    snapshot.forEach(async (doc: any) => {
+      const userData = await getUserWithId(userId);
+      const responseObject = {
+        tweet: doc.data(),
+        user: userData
+      }
+      responseData.push(responseObject);
+    });
+    return res.status(200).json(responseData);
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -67,17 +88,21 @@ const getAllTweets =async (req:Request, res: Response) => {
 //GET request /tweet/:id
 // Gets a tweet's content given its id.
 const getTweet = async (req:Request, res: Response) => {
-  const {id} = req.params;
+  const {userId, id} = req.params;
   try {
     const tweetSnapshot = await tweetsCollection.doc(id).get();
     const tweetReplies = await getTweetRepliesforTweetWithId(id);
+    const userData = await getUserWithId(userId);
 
     const response = {
-      tweetData: tweetSnapshot.data(),
-      tweetReplies: tweetReplies
+      tweet: tweetSnapshot.data(),
+      replies: tweetReplies,
+      user: userData
     }
+
     return res.status(200).json(response);
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -96,6 +121,7 @@ const deleteTweet =async (req:Request, res: Response) => {
       message: "Tweet deleted successfully."
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -116,6 +142,7 @@ const getUserTweets = async (req:Request, res: Response) => {
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
     return res.status(200).json(userTweetsList);
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -173,6 +200,7 @@ const replyToTweet = async (req:Request, res: Response) => {
       repliesCount: (repliesCount + 1)
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -225,6 +253,7 @@ const retweetTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -243,6 +272,7 @@ const getTweetReplies = async (req:Request, res: Response) => {
     querySnapshot.forEach((doc: any) => userTweetsList.push(doc.data()));
     return res.status(200).json(userTweetsList);
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -296,6 +326,7 @@ const likeTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -329,6 +360,7 @@ const dislikeTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -356,6 +388,7 @@ const bookmarkTweet = async (req:Request, res: Response) => {
       tweetId: tweetId
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
@@ -399,6 +432,7 @@ const getUserBookmarks = async (req:Request, res: Response) => {
     
     return res.status(200).json(userBookmarkedTweetsList);
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return res.status(500).json(error.message);
     }
