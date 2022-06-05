@@ -25,8 +25,8 @@ export class User {
         this.name = body.username
         this.birthdate = body.birthdate
         this.username = body.username
-        this.avatar = body.avatar || '/'
-        this.coverPhoto = body.coverPhoto || '/'
+        this.avatar = 'https://firebasestorage.googleapis.com/v0/b/twitterclonewebengineering.appspot.com/o/default-avatar.png?alt=media&token=7cb1d4bd-3672-4e2f-ae18-9d2fadb7c0a8'
+        this.coverPhoto = 'https://firebasestorage.googleapis.com/v0/b/twitterclonewebengineering.appspot.com/o/defCover.jpeg?alt=media&token=c1f0ccdb-dd31-41b0-9b12-c09a7f5c2a25'
         this.bio = body.bio || '/'
         this.location = body.location || '/'
         

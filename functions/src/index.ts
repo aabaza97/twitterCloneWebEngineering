@@ -18,9 +18,9 @@ App.use(express.json());
 
 App.get("/", (req, res) => res.status(200).send("Hello tweeter ;p"));
 App.post("/tweets", mediaToURL, Tweet.composeTweet);
-App.get("/tweets", Tweet.getAllTweets);
+App.get("/tweets/:userId", Tweet.getAllTweets);
 App.delete("/tweets/:id", Tweet.deleteTweet);
-App.get("/tweet/:id", Tweet.getTweet);
+App.get("/tweet/:id/:userId", Tweet.getTweet);
 App.get("/profile/:id", Tweet.getUserTweets);
 App.post("/reply/:tweetId", mediaToURL, Tweet.replyToTweet);
 App.post("/retweet/:tweetId", mediaToURL, Tweet.retweetTweet);
